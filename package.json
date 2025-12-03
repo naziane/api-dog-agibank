@@ -1,0 +1,20 @@
+{
+  "name": "api-dog",
+  "version": "1.0.0",
+  "description": "Projeto completo para testes de API usando Cypress",
+  "scripts": {
+    "test": "cypress run",
+
+    "report:clean": "del cypress\\reports\\report.json 2>nul || true",
+    "report:merge": "mochawesome-merge \"cypress/reports/mochawesome*.json\" > cypress/reports/report.json",
+    "report:generate": "marge ./cypress/reports/report.json --reportDir ./cypress/reports --reportFilename report.html --inline",
+    "report:open": "start \"\" \"%cd%\\cypress\\reports\\report.html\"",
+    "test:report": "npm run report:clean && npm run test && npm run report:merge && npm run report:generate && npm run report:open"
+  },
+  "devDependencies": {
+    "cypress": "latest",
+    "marge": "^1.0.1",
+    "mochawesome": "^7.1.4",
+    "mochawesome-merge": "^5.1.0"
+  }
+}

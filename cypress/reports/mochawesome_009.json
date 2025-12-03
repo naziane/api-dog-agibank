@@ -1,0 +1,200 @@
+{
+  "stats": {
+    "suites": 1,
+    "tests": 6,
+    "passes": 6,
+    "pending": 0,
+    "failures": 0,
+    "start": "2025-12-03T22:25:32.476Z",
+    "end": "2025-12-03T22:25:35.345Z",
+    "duration": 2869,
+    "testsRegistered": 6,
+    "passPercent": 100,
+    "pendingPercent": 0,
+    "other": 0,
+    "hasOther": false,
+    "skipped": 0,
+    "hasSkipped": false
+  },
+  "results": [
+    {
+      "uuid": "ccba512b-ce9b-4893-8208-66b6bd53597a",
+      "title": "",
+      "fullFile": "cypress\\e2e\\api\\breed_images_random.js",
+      "file": "cypress\\e2e\\api\\breed_images_random.js",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "07b25ac0-fda5-4a6e-ac48-468dab9357a0",
+          "title": "Dog API - /breed/images/random",
+          "fullFile": "",
+          "file": "",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "Deve retornar status 200",
+              "fullTitle": "Dog API - /breed/images/random Deve retornar status 200",
+              "timedOut": null,
+              "duration": 895,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.request(endpoint).then(response => {\n  cy.logResponse(response);\n  expect(response.status).to.eq(200);\n  expect(response.body.status).to.eq(\"success\");\n});",
+              "err": {},
+              "uuid": "f7d55c45-ccf6-4cfc-86b4-bbb57d206992",
+              "parentUUID": "07b25ac0-fda5-4a6e-ac48-468dab9357a0",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "Deve retornar uma imagem em formato de string",
+              "fullTitle": "Dog API - /breed/images/random Deve retornar uma imagem em formato de string",
+              "timedOut": null,
+              "duration": 308,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.request(endpoint).then(response => {\n  cy.log(response);\n  expect(response.body).to.have.property(\"message\");\n  expect(response.body.message).to.be.a(\"string\");\n});",
+              "err": {},
+              "uuid": "f7ea1e36-d9b7-4030-b446-a4675cb28ab2",
+              "parentUUID": "07b25ac0-fda5-4a6e-ac48-468dab9357a0",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "Deve garantir que a URL retornada é válida",
+              "fullTitle": "Dog API - /breed/images/random Deve garantir que a URL retornada é válida",
+              "timedOut": null,
+              "duration": 314,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.request(endpoint).then(response => {\n  const imageUrl = response.body.message;\n  cy.log(imageUrl);\n  expect(imageUrl).to.match(/^https?:\\/\\//);\n});",
+              "err": {},
+              "uuid": "53721921-53f1-41f6-8a63-f7485d8934f2",
+              "parentUUID": "07b25ac0-fda5-4a6e-ac48-468dab9357a0",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "Deve retornar uma imagem no formato válido",
+              "fullTitle": "Dog API - /breed/images/random Deve retornar uma imagem no formato válido",
+              "timedOut": null,
+              "duration": 305,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.request(endpoint).then(response => {\n  const imageUrl = response.body.message;\n  cy.log(imageUrl);\n  expect(imageUrl).to.match(/\\.(jpg|jpeg|png)$/);\n});",
+              "err": {},
+              "uuid": "969641e8-62dd-41e9-987b-a06592968ba0",
+              "parentUUID": "07b25ac0-fda5-4a6e-ac48-468dab9357a0",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "Deve responder em menos de 1 segundo",
+              "fullTitle": "Dog API - /breed/images/random Deve responder em menos de 1 segundo",
+              "timedOut": null,
+              "duration": 308,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.request({\n  url: endpoint,\n  time: true\n}).then(response => {\n  cy.log(\"Tempo (ms): \" + response.duration);\n  expect(response.duration).to.be.lessThan(1000);\n});",
+              "err": {},
+              "uuid": "afa33e3e-133f-420d-9279-fc5a3ab2b91a",
+              "parentUUID": "07b25ac0-fda5-4a6e-ac48-468dab9357a0",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "Deve retornar imagens diferentes em requisições consecutivas",
+              "fullTitle": "Dog API - /breed/images/random Deve retornar imagens diferentes em requisições consecutivas",
+              "timedOut": null,
+              "duration": 613,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "let firstImage = null;\ncy.request(endpoint).then(response1 => {\n  firstImage = response1.body.message;\n  return cy.request(endpoint);\n}).then(response2 => {\n  const secondImage = response2.body.message;\n  cy.log(\"Primeira: \" + firstImage);\n  cy.log(\"Segunda: \" + secondImage);\n  expect(firstImage).to.not.equal(secondImage);\n});",
+              "err": {},
+              "uuid": "45cc6f17-dd49-4ea7-a163-3b8e1e1dc542",
+              "parentUUID": "07b25ac0-fda5-4a6e-ac48-468dab9357a0",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [
+            "f7d55c45-ccf6-4cfc-86b4-bbb57d206992",
+            "f7ea1e36-d9b7-4030-b446-a4675cb28ab2",
+            "53721921-53f1-41f6-8a63-f7485d8934f2",
+            "969641e8-62dd-41e9-987b-a06592968ba0",
+            "afa33e3e-133f-420d-9279-fc5a3ab2b91a",
+            "45cc6f17-dd49-4ea7-a163-3b8e1e1dc542"
+          ],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 2743,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 2000
+    }
+  ],
+  "meta": {
+    "mocha": {
+      "version": "7.2.0"
+    },
+    "mochawesome": {
+      "options": {
+        "quiet": false,
+        "reportFilename": "mochawesome",
+        "saveHtml": false,
+        "saveJson": true,
+        "consoleReporter": "spec",
+        "useInlineDiffs": false,
+        "code": true
+      },
+      "version": "7.1.4"
+    },
+    "marge": {
+      "options": {
+        "reportDir": "cypress/reports",
+        "overwrite": false,
+        "html": false,
+        "json": true
+      },
+      "version": "6.3.2"
+    }
+  }
+}
