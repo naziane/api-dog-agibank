@@ -1,0 +1,41 @@
+name: Cypress API Tests with Mochawesome Report
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  cypress-run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Cypress with Mochawesome
+        run: npx cypress run
+
+      # 👍 Mesclar todos os arquivos JSON gerados
+      - name: Merge Mochawesome reports
+        run: npx mochawesome-merge cypress/reports/mochawesome/*.json > mochawesome.json
+
+      # 👍 Criar relatório HTML final
+      - name: Generate Mochawesome HTML
+        run: npx marge mochawesome.json -f report -o mochawesome-report
+
+      # 📦 Publicar como artifact
+      - name: Upload Mochawesome HTML Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: mochawesome-report
+          path: mochawesome-report
