@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v3
 
       - name: Setup Node.js
@@ -19,30 +19,38 @@ jobs:
         with:
           node-version: 18
 
+      - name: Cache Node modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: node-modules-${{ hashFiles('package-lock.json') }}
+
+      - name: Cache Cypress binary
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/Cypress
+          key: cypress-binary-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
       - name: Install dependencies
         run: npm install
 
-      - name: Fix Cypress permissions
-        run: chmod +x node_modules/.bin/cypress || true
+      - name: Install Cypress binary
+        run: npx cypress install
 
-      - name: Verify Cypress
+      - name: Verify Cypress installation
         run: npx cypress verify
 
       - name: Run Cypress tests
-        run: npx cypress run
+        run: npx cypress run --reporter mochawesome --reporter-options reportDir=cypress/reports,json=true
 
-
-      # 👍 Mesclar todos os arquivos JSON gerados
       - name: Merge Mochawesome reports
-        run: npx mochawesome-merge cypress/reports/mochawesome/*.json > mochawesome.json
+        run: npx mochawesome-merge cypress/reports/*.json > cypress/reports/report.json
 
-      # 👍 Criar relatório HTML final
-      - name: Generate Mochawesome HTML
-        run: npx marge mochawesome.json -f report -o mochawesome-report
+      - name: Generate Mochawesome HTML report
+        run: npx marge cypress/reports/report.json --reportDir=cypress/reports --inline
 
-      # 📦 Publicar como artifact
-      - name: Upload Mochawesome HTML Report
-        uses: actions/upload-artifact@v4
+      - name: Upload report artifact
+        uses: actions/upload-artifact@v3
         with:
-          name: mochawesome-report
-          path: mochawesome-report
+          name: cypress-report
+          path: cypress/reports
