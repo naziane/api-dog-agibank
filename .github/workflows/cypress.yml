@@ -44,14 +44,24 @@ jobs:
         run: npx cypress verify
 
       - name: Run Cypress tests
-        run: npx cypress run --reporter mochawesome --reporter-options reportDir=cypress/reports,json=true
+        run: npx cypress run --reporter mochawesome --reporter-options reportDir=cypress/reports,json=true,overwrite=false,html=false
+
 
       - name: Fix Mochawesome permissions
         run: chmod +x ./node_modules/.bin/mochawesome-merge || true
 
+      - name: List reports folder
+        run: ls -la cypress/reports
+
 
       - name: Merge Mochawesome reports
-        run: npx mochawesome-merge cypress/reports/*.json > cypress/reports/report.json
+        run: |
+          if ls cypress/reports/*.json 1> /dev/null 2>&1; then
+            npx mochawesome-merge cypress/reports/*.json > cypress/reports/report.json
+          else
+            echo "{}" > cypress/reports/report.json
+          fi
+
 
 
       - name: Generate Mochawesome HTML report
