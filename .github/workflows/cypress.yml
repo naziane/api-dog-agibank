@@ -46,8 +46,13 @@ jobs:
       - name: Run Cypress tests
         run: npx cypress run --reporter mochawesome --reporter-options reportDir=cypress/reports,json=true
 
+      - name: Fix Mochawesome permissions
+        run: chmod +x ./node_modules/.bin/mochawesome-merge || true
+
+
       - name: Merge Mochawesome reports
         run: npx mochawesome-merge cypress/reports/*.json > cypress/reports/report.json
+
 
       - name: Generate Mochawesome HTML report
         run: npx marge cypress/reports/report.json --reportDir=cypress/reports --inline
