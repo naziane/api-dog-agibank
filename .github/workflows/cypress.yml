@@ -52,7 +52,11 @@ jobs:
 
       - name: List reports folder
         run: ls -la cypress/reports
-
+      
+      - name: Check JSON reports
+        run: |
+          echo "Listing JSON reports:"
+          ls -la cypress/reports/*.json || echo "No JSON reports found!"
 
       - name: Merge Mochawesome reports
         run: |
