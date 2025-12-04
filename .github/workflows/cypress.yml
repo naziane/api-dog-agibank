@@ -56,15 +56,16 @@ jobs:
       - name: Fix Mochawesome permissions
         run: chmod +x ./node_modules/.bin/mochawesome-merge || true
 
-      - name: Merge Mochawesome reports safely
+      - name: Merge Mochawesome reports
         run: |
           mkdir -p cypress/reports
-          if ls cypress/reports/*.json 1> /dev/null 2>&1; then
-            npx mochawesome-merge cypress/reports/*.json > cypress/reports/report.json
+          if ls cypress/reports/mochawesome_*.json 1> /dev/null 2>&1; then
+            npx mochawesome-merge cypress/reports/mochawesome_*.json > cypress/reports/report.json
           else
             echo '{"stats":{},"results":[]}' > cypress/reports/report.json
             echo "No JSON reports to merge. Created empty report."
           fi
+
 
       - name: Fix Mochawesome HTML generator permissions
         run: chmod +x ./node_modules/.bin/marge || true
