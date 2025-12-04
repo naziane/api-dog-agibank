@@ -19,7 +19,7 @@ jobs:
         with:
           node-version: 18.16.0
 
-      - name: Cache Node modules
+      - name: Cache node_modules
         uses: actions/cache@v3
         with:
           path: node_modules
@@ -33,7 +33,7 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-      
+
       - name: Fix Cypress permissions
         run: chmod +x ./node_modules/.bin/cypress || true
 
@@ -44,29 +44,30 @@ jobs:
         run: npx cypress verify
 
       - name: Run Cypress tests
-        run: npx cypress run --reporter mochawesome --reporter-options reportDir=cypress/reports,json=true,overwrite=false,html=false
+        run: npx cypress run \
+          --reporter mochawesome \
+          --reporter-options reportDir=cypress/reports,json=true,overwrite=false,html=false
 
+      - name: List JSON reports
+        run: |
+          echo "Generated JSON reports:"
+          ls -la cypress/reports || echo "No JSON reports found!"
 
       - name: Fix Mochawesome permissions
         run: chmod +x ./node_modules/.bin/mochawesome-merge || true
 
-      - name: List reports folder
-        run: ls -la cypress/reports
-      
-      - name: Check JSON reports
+      - name: Merge Mochawesome reports safely
         run: |
-          echo "Listing JSON reports:"
-          ls -la cypress/reports/*.json || echo "No JSON reports found!"
-
-      - name: Merge Mochawesome reports
-        run: |
+          mkdir -p cypress/reports
           if ls cypress/reports/*.json 1> /dev/null 2>&1; then
             npx mochawesome-merge cypress/reports/*.json > cypress/reports/report.json
           else
-            echo "{}" > cypress/reports/report.json
+            echo '{"stats":{},"results":[]}' > cypress/reports/report.json
+            echo "No JSON reports to merge. Created empty report."
           fi
 
-
+      - name: Fix Mochawesome HTML generator permissions
+        run: chmod +x ./node_modules/.bin/marge || true
 
       - name: Generate Mochawesome HTML report
         run: npx marge cypress/reports/report.json --reportDir=cypress/reports --inline
